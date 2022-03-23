@@ -13,4 +13,12 @@ test("Adding a message to MessageHandler", () => {
     expect(
         messageHandler.messages[0]
     ).toBeInstanceOf(Message);
+
+    expect(
+        messageHandler.messages[0].username
+    ).toMatch("MyUsername");
+
+    expect(
+        messageHandler.messages[0].message
+    ).toMatch("My Message");
 });
