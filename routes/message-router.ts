@@ -5,11 +5,23 @@ export const messageRouter = express.Router();
 const messageHandler = new MessageHandler();
 
 messageRouter.get("/", (req, res) => {
-    res.send(messageHandler.messages);
+    try {
+        const messages = messageHandler.messages;
+
+        res.status(200).json(messages);
+    } catch {
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+
 });
 
 messageRouter.post("/", (req, res) => {
-    messageHandler.addMessage(req.body.username, req.body.message);
+    try {
+        messageHandler.addMessage(req.body.username, req.body.message);
     
-    res.send("Added message");
+        res.status(201).json("Added message");
+    } catch (err: any) {
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+
 });
