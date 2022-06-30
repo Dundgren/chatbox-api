@@ -18,6 +18,8 @@ export class Db {
         const connection = await mysql.createConnection(this.config);
         const result = await connection.query(sql, params);
 
+        connection.end();
+
         return result;
     }
 }
