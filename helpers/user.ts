@@ -9,7 +9,7 @@ export class User {
         this.db = db;
     }
 
-    // Todo: Make addOne accept an object that fits a template instead.
+    // TODO: Make addOne accept an object that fits a template instead.
     async addOne(user: Record<string, string>) {
         try {
             const sql = "INSERT INTO user (id, username, age, sex, location, password) VALUES (?, ?, ?, ?, ?, ?);";
@@ -37,11 +37,17 @@ export class User {
     async register(user: Record<string, string>) {
         const saltRounds = 10;
 
-        bcrypt.hash(user.password, saltRounds, (err, hash) => {
-            if (err) throw err;
+        // TODO: Catch the error in the callback and propagate it
+        try {
+            bcrypt.hash(user.password, saltRounds, async (err, hash) => {
+                if (err) throw err;
+    
+                user.password = hash;
+                await this.addOne(user);
+            });
+        } catch (err: unknown) {
+            throw err;
+        }
 
-            user.password = hash;
-            this.addOne(user);
-        });
     }
 }

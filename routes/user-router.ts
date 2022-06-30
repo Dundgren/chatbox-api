@@ -17,6 +17,16 @@ const userHandler = new User(db);
 //     }
 // });
 
+userRouter.get("/:username", async (req, res) => {
+    try {
+        const users = await userHandler.findOne(req.params.username);
+
+        res.status(200).json(users);
+    } catch {
+        res.status(500).json({ user: "Internal Server Error" });
+    }
+});
+
 userRouter.post("/", async (req, res) => {
     try {
         const user = {
