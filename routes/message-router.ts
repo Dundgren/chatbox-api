@@ -20,7 +20,7 @@ messageRouter.get("/", async (req, res) => {
 messageRouter.post("/", async (req, res) => {
     try {
         await messageHandler.addOne(req.body.message, req.body.user);
-    
+
         res.status(201).json({ message: "Added message" });
     } catch (err: any) {
         let statusCode = 500;

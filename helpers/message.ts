@@ -21,7 +21,7 @@ export class Message {
 
     async findAll() {
         try {
-            const sql = "SELECT * FROM message";
+            const sql = "SELECT * FROM message ORDER BY timestamp ASC";
             const result = await this.db.query(sql);
 
             return result;
