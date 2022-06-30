@@ -1,23 +1,33 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
+import { Db } from "./db";
 
 export class Message {
-    private db: any;
+    private db: Db;
 
-    constructor(db: any) {
+    constructor(db: Db) {
         this.db = db;
     }
 
-    async addMessage(message: string, user: string, id_:string=uuidv4()) {
+    async addOne(message: string, user: string, id_:string=uuidv4()) {
         try {
             const sql = "INSERT INTO message (id, message, user) VALUES (?, ?, ?);";
 
-            this.db.query(sql, [id_, message, user], (error: any, results: any) => {
-                if (error) throw error;
-                console.log(results);
-            });
-        } catch (err: any) {
+            await this.db.query(sql, [id_, message, user]);
+        } catch (err: unknown) {
             console.log(err);
+            throw err;
         }
+    }
 
+    async findAll() {
+        try {
+            const sql = "SELECT * FROM message";
+            const result = await this.db.query(sql);
+
+            return result;
+        } catch (err: unknown) {
+            console.log(err);
+            throw err;
+        }
     }
 }

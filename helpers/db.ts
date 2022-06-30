@@ -1,26 +1,23 @@
-const mysql = require('mysql');
-
+import mysql from 'promise-mysql';
 
 export class Db {
-    readonly connection: any;
+    readonly config: Record<string, unknown>;
 
     constructor() {
-        this.connection = mysql.createConnection({
+        this.config = {
             host:     process.env.RDS_HOSTNAME,
             port:     process.env.RDS_PORT,
             user:     process.env.RDS_USERNAME,
             password: process.env.RDS_PASSWORD,
             database: process.env.RDS_DB_NAME,
             multipleStatements: true
-        });
+        };
+    }
 
-        this.connection.connect(function(err: any) {
-            if (err) {
-              console.error('error connecting: ' + err.stack);
-              return;
-            }
+    async query(sql: string, params: string[] = []) {
+        const connection = await mysql.createConnection(this.config);
+        const result = await connection.query(sql, params);
 
-            console.log("Connected to DB");
-        });
+        return result;
     }
 }
