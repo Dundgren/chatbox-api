@@ -5,8 +5,8 @@ test("Adding a message", async () => {
     await request(app)
         .post("/api/v1/message")
         .send(JSON.stringify({
-            username: "Dundgren",
-            message: "Hellooo"
+            user: "1",
+            message: "Hellooo",
         }))
-        .expect(200)
+        .expect(201)
 });
