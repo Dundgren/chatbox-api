@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Db } from "./db";
 import bcrypt from "bcrypt";
 
-export class Message {
+export class User {
     private db: Db;
 
     constructor(db: Db) {
@@ -10,11 +10,12 @@ export class Message {
     }
 
     // Todo: Make addOne accept an object that fits a template instead.
-    async addOne(username: string, age: number, sex: string, location: string, password: string, id_:string=uuidv4()) {
+    async addOne(user: Record<string, string>) {
         try {
-            const sql = "INSERT INTO user (id, username, age, sex, location, password) VALUES (?, ?, ?, ?, ?, ?, ?);";
+            const sql = "INSERT INTO user (id, username, age, sex, location, password) VALUES (?, ?, ?, ?, ?, ?);";
 
-            await this.db.query(sql, [id_, username, age.toString(), sex, location, password]);
+            user.id = uuidv4();
+            await this.db.query(sql, [user.id, user.username, user.age, user.sex, user.location, user.password]);
         } catch (err: unknown) {
             console.log(err);
             throw err;
@@ -33,13 +34,14 @@ export class Message {
         }
     }
 
-    async register(username: string, age: number, sex: string, location: string, password: string) {
+    async register(user: Record<string, string>) {
         const saltRounds = 10;
 
-        bcrypt.hash(password, saltRounds, (err, hash) => {
+        bcrypt.hash(user.password, saltRounds, (err, hash) => {
             if (err) throw err;
 
-            this.addOne(username, age, sex, location, hash);
+            user.password = hash;
+            this.addOne(user);
         });
     }
 }
