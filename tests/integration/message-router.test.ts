@@ -3,10 +3,10 @@ import app from "../../index";
 
 test("Adding a message", async () => {
     await request(app)
-        .post("/api/v1/message")
-        .send(JSON.stringify({
-            user: "1",
-            message: "Hellooo",
-        }))
+        .post("/api/v1/messages")
+        .send({
+            "user": "1",
+            "message": "hi"
+        })
         .expect(201)
 });
