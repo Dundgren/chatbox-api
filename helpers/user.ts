@@ -9,7 +9,7 @@ export class User {
         this.db = db;
     }
 
-    // TODO: Make addOne accept an object that fits a template instead.
+    // TODO: Make addOne accept an object that fits a template.
     async addOne(user: Record<string, string>) {
         try {
             const sql = "INSERT INTO user (id, username, age, sex, location, password) VALUES (?, ?, ?, ?, ?, ?);";
@@ -48,6 +48,5 @@ export class User {
         } catch (err: unknown) {
             throw err;
         }
-
     }
 }

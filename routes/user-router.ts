@@ -1,31 +1,13 @@
 import express from "express";
+import bcrypt from "bcrypt";
 import { Db } from "../helpers/db";
 import { User } from "../helpers/user";
+
 
 export const userRouter = express.Router();
 
 const db = new Db();
 const userHandler = new User(db);
-
-// userRouter.get("/", async (req, res) => {
-//     try {
-//         const users = await userHandler.findAll();
-
-//         res.status(200).json(users);
-//     } catch {
-//         res.status(500).json({ user: "Internal Server Error" });
-//     }
-// });
-
-userRouter.get("/:username", async (req, res) => {
-    try {
-        const users = await userHandler.findOne(req.params.username);
-
-        res.status(200).json(users);
-    } catch {
-        res.status(500).json({ user: "Internal Server Error" });
-    }
-});
 
 userRouter.post("/", async (req, res) => {
     try {
@@ -49,6 +31,22 @@ userRouter.post("/", async (req, res) => {
             message = "Missing parameter(s)";
         }
 
-        res.status(statusCode).json({ Message: message });
+        res.status(statusCode).json({ message: message });
+    }
+});
+
+userRouter.post("/login", async (req, res) => {
+    try {
+        const user = await userHandler.findOne(req.body.username);
+
+        // Placing user check first avoids error if one isn't found.
+        // User and password check in the same if-statement as to not differentiate between fails.
+        if (user[0] && await bcrypt.compare(req.body.password, user[0].password)) {
+            res.status(200).json(user[0]);
+        } else {
+            res.status(401).json({ message: "Login Failed" });
+        }
+    } catch (err: unknown) {
+        res.status(500).json({ message: "Internal Server Error" });
     }
 });
