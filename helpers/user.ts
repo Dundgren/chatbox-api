@@ -34,19 +34,16 @@ export class User {
         }
     }
 
-    async register(user: Record<string, string>) {
+    async hashPassword(password: string) {
         const saltRounds = 10;
 
-        // TODO: Catch the error in the callback and propagate it
-        try {
-            bcrypt.hash(user.password, saltRounds, async (err, hash) => {
-                if (err) throw err;
-    
-                user.password = hash;
-                await this.addOne(user);
+        const hashedPassword: string = await new Promise((resolve, reject) => {
+            bcrypt.hash(password, saltRounds, function(err, hash) {
+              if (err) reject(err)
+              resolve(hash)
             });
-        } catch (err: unknown) {
-            throw err;
-        }
+          })
+
+        return hashedPassword;
     }
 }

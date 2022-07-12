@@ -19,7 +19,10 @@ userRouter.post("/", async (req, res) => {
             location: req.body.location,
         }
 
-        await userHandler.register(user);
+        const hashedPassword = await userHandler.hashPassword(user.password);
+
+        user.password = hashedPassword;
+        await userHandler.addOne(user);
     
         res.status(201).json({ Message: "Added user" });
     } catch (err: any) {
@@ -29,6 +32,9 @@ userRouter.post("/", async (req, res) => {
         if (err.code == "ER_BAD_NULL_ERROR") {
             statusCode = 400;
             message = "Missing parameter(s)";
+        } else if (err.code == "ER_DUP_ENTRY") {
+            statusCode = 400;
+            message = "Duplicate entry";
         }
 
         res.status(statusCode).json({ message: message });
@@ -44,9 +50,9 @@ userRouter.post("/login", async (req, res) => {
         if (user[0] && await bcrypt.compare(req.body.password, user[0].password)) {
             res.status(200).json(user[0]);
         } else {
-            res.status(401).json({ message: "Login Failed" });
+            res.status(401).json({ message: "Login failed" });
         }
     } catch (err: unknown) {
-        res.status(500).json({ message: "Internal Server Error" });
+        res.status(500).json({ message: "Internal server error" });
     }
 });
