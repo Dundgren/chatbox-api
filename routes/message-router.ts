@@ -34,3 +34,21 @@ messageRouter.post("/", async (req, res) => {
         res.status(statusCode).json({ message: message });
     }
 });
+
+messageRouter.post("/delete", async (req, res) => {
+    try {
+        await messageHandler.deleteOne(req.body.messageId);
+
+        res.status(200).json({ message: "Deleted message" });
+    } catch (err: any) {
+        let statusCode = 500;
+        let message = "Internal server error";
+
+        if (err.code == "ER_BAD_NULL_ERROR") {
+            statusCode = 400;
+            message = "Missing parameter(s)";
+        }
+
+        res.status(statusCode).json({ message: message });
+    }
+});

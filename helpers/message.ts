@@ -34,4 +34,15 @@ export class Message {
             throw err;
         }
     }
+
+    async deleteOne(messageId: string) {
+        try {
+            const sql = "DELETE FROM message WHERE id = ? LIMIT 1";
+
+            await this.db.query(sql, [messageId]);
+        } catch (err: unknown) {
+            console.log(err);
+            throw err;
+        }
+    }
 }
