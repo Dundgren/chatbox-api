@@ -21,7 +21,7 @@ export class Message {
 
     async findAll() {
         try {
-            const sql = `SELECT message.id, message.message, message.timestamp, user.username
+            const sql = `SELECT message.id, message.message, message.timestamp, user.username, message.user
                         FROM message
                         JOIN user
                         ON message.user=user.id

@@ -12,6 +12,7 @@ const userHandler = new User(db);
 userRouter.post("/", async (req, res) => {
     try {
         const user = {
+            id: "",
             username: req.body.username,
             password: req.body.password,
             age: req.body.age,
