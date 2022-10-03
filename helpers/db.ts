@@ -20,7 +20,7 @@ export class Db {
     async query(sql: string, params: string[] = []) {
         const connection =  await mysql.createConnection(this.config.host);
         const [rows, fields]: any = await connection.execute(sql, params);
-        console.log(rows)
+        console.log(rows);
         connection.end();
 
         return rows;

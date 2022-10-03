@@ -9,8 +9,14 @@ export class User {
         this.db = db;
     }
 
-    // TODO: Make addOne accept an object that fits a template.
-    async addOne(user: Record<string, string>) {
+    async addOne(user: {
+        id: string;
+        username: string;
+        age: string;
+        sex: string;
+        location: string;
+        password: string;
+    }) {
         try {
             const sql = "INSERT INTO user (id, username, age, sex, location, password) VALUES (?, ?, ?, ?, ?, ?);";
 

@@ -21,7 +21,7 @@ export class Message {
 
     async findAll() {
         try {
-            const sql = `SELECT message.id, message.message, message.timestamp, user.username
+            const sql = `SELECT message.id, message.message, message.timestamp, user.username, message.user
                         FROM message
                         JOIN user
                         ON message.user=user.id
@@ -29,6 +29,17 @@ export class Message {
             const result = await this.db.query(sql);
 
             return result;
+        } catch (err: unknown) {
+            console.log(err);
+            throw err;
+        }
+    }
+
+    async deleteOne(messageId: string) {
+        try {
+            const sql = "DELETE FROM message WHERE id = ? LIMIT 1";
+
+            await this.db.query(sql, [messageId]);
         } catch (err: unknown) {
             console.log(err);
             throw err;
